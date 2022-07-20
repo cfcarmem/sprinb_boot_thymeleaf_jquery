@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+
+<link  rel="stylesheet" href="webjars/bootstrap/4.6.1/css/bootstrap.css"/>
+<script type="text/javascript" src="webjars/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="webjars/bootstrap/4.6.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/js/principal.js" th:src="@{js/principal.js}"></script>
+
+
+<title>Cadastro de Departamentos</title>
+
+<h3>Departamentos</h3>
+</head>
+<body>
+
+
+<form action="/" method="post" class="col s12">
+	<input class="btn btn-dark sm" type="submit" value="Home">
+</form>
+
+
+
+<div class="container">
+	
+	<a data-toggle="modal" data-target="#addDepartamento" data-whatever="@mdo" style="cursor:pointer;">
+		<img src="webjars/bootstrap-icons/1.8.3//icons/clipboard-plus.svg" alt="Cadastrar novo" width="32" height="32"  >
+	</a>
+
+	<br>
+
+<table class="table table-striped">
+	<tr>
+		<td>
+			ID
+		</td>
+		<td>
+			Nome
+		</td>
+		<td colspan="2">
+			Ação
+		</td>
+	</tr>
+	<tr th:each = "deps: ${listadepartamentos}">
+		<td th:text= "${deps.id}">Id</td>	
+		<td th:text= "${deps.nome}">Name</td>	
+		<td align="center" style="width:40px;"> 
+			<a th:href="@{/buscardepartamento/(iddepartamento=${deps.id})}" class="btn btn-primary btn-sm btnEdicao"  >
+				Editar
+			</a>
+		</td>
+		<td align="center" style="width:40px;"> 
+			<a th:href="@{/deletar/(iddepartamento=${deps.id})}" class="btn btn-danger btn-sm deletebtn">Deletar</a>
+		</td>
+	</tr>
+</table>
+</div>
+
+
+<div class="modal fade" id="addDepartamento" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<form th:action="@{/salvar}" method="post">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Novo Departamento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="addNome" class="col-form-label">Nome:</label>
+            <input type="text" class="form-control" id="addNome" name="nome">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+
+
+
+
+<div class="modal fade" id="editDepartamento" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<form th:action="@{/editar}" method="PUT">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Editar Departamento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+       <div class="modal-body">
+          <div class="form-group">
+            <label for="editId" class="col-form-label">Id:</label>
+            <input type="text" class="form-control" id="editId" name="id" readonly="readonly">
+          </div>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="editNome" class="col-form-label">Nome:</label>
+            <input type="text" class="form-control" id="editNome" name="nome">
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog " id="deleteModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirma deleção</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Deletar Departamento?</p>
+      </div>
+      <div class="modal-footer">
+        <a href=""  class="btn btn-danger" id="deleteId">Sim</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

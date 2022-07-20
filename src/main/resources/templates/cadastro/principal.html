@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+
+<link  rel="stylesheet" href="../../webjars/bootstrap/4.6.1/css/bootstrap.css"/>
+<link  rel="stylesheet" href="../js/jquery.alerts.css"/>
+<script type="text/javascript" src="../../webjars/jquery/3.4.1/jquery.js"></script>
+<script type="text/javascript" src="../../webjars/bootstrap/4.6.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../static/js/jquery.alerts.js" th:src="@{../js/jquery.alerts.js}"></script>
+
+<title>Sistema SISCAD</title>
+
+<h3 >SISCAD</h3>
+
+</head>
+<body>
+	
+	<span id="menuSuperior" style="margin-rigth:400px;"></span>
+	<div id="conteudoPagina"></div>
+		
+	<script type="text/javascript" src="../../static/js/jQuery-Mask-Plugin-master/src/jquery.mask.js" th:src="@{../js/jQuery-Mask-Plugin-master/src/jquery.mask.js}"></script>
+	<script type="text/javascript" src="../../static/js/jQuery-Mask-Plugin-master/test/jquery.mask.test.js" th:src="@{../js/jQuery-Mask-Plugin-master/test/jquery.mask.test.js}"></script>
+	<script type="text/javascript" src="../static/js/projeto.js" th:src="@{../js/projeto.js}"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+			
+	<script>
+	//carregar o menu
+	   function carregarMenuSuperior(){
+		 $.ajax({
+			 url:'/menu',
+			 method:"get"
+		 })
+		 .done(function(retorno){
+			 $("#menuSuperior").html(retorno);
+		 })
+	 }
+	
+	 //AO CLICAR NO MENU PROJETOS
+		function carregarProjetos(){
+			$.ajax({
+				url:"/projeto_listar"
+			})
+			.done(function(resposta){
+				$("#conteudoPagina").html(resposta);
+			})
+		}
+	 
+	 //AO CLICAR NO MENU DEPARTAMENTOS
+	 	function carregarDepartamentos(){
+	 		$.ajax({
+				url:"/cadastrodepartamento"
+			})
+			.done(function(resposta){
+				$("#conteudoPagina").html(resposta);
+			}) 
+	    }
+	 
+	 //relatorio
+	 	function relatorio(){
+	 		jAlert("Em desenvolvimento.")
+	     }
+	 
+		carregarMenuSuperior();
+	</script>
+</body>
+</html>

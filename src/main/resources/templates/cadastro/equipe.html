@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link  rel="stylesheet" href="../../webjars/bootstrap/4.6.1/css/bootstrap.css"/>
+<script type="text/javascript" src="../../webjars/bootstrap/4.6.1/js/bootstrap.min.js"></script>
+
+
+<title>Equipe</title>
+</head>
+
+<input type="hidden" name="idprojeto" id="idprojeto">
+ <div class="modal-body">
+   <div class="form-group">
+  	  <label for="pequipe" class="col-form-label ">Equipe:</label>
+       <select name="equipe" id="pequipe"  class="obrigatorioe"> </select>
+       <input type="button" name="addusuario" id="addusuario" onclick="javascript:adicionarUsuEquipe();"class='btn btn-info sm' value="Adicionar">
+     </div>
+     
+  </div>
+
+<div id="listagem_equipe" title="Equipe"></div>
+
+<script>
+	 mostrarListagem();
+</script>
+
+<body>
+
+</body>
+</html>

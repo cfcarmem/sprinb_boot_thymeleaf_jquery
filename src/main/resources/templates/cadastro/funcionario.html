@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+
+
+<link  rel="stylesheet" href="webjars/bootstrap/4.6.1/css/bootstrap.css"/>
+<link  rel="stylesheet" href="../js/jquery.alerts.css"/>
+<script type="text/javascript" src="webjars/jquery/3.4.1/jquery.js"></script>
+<script type="text/javascript" src="webjars/bootstrap/4.6.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/js/principal.js" th:src="@{js/principal.js}"></script>
+<script type="text/javascript" src="../static/js/jquery.alerts.js" th:src="@{js/jquery.alerts.js}"></script>
+
+<title>Funcionários</title>
+
+<h3 >Funcionários</h3>
+
+</head>
+<body>
+<form action="/" method="post" class="col s12">
+<input class="btn btn-dark sm" type="submit" value="Home">
+</form>
+
+<div class="container">
+
+<br>
+<br>
+<a data-toggle="modal" data-target="#addFuncionario" data-whatever="@mdo" style="cursor:pointer;">
+<img src="webjars/bootstrap-icons/1.8.3//icons/clipboard-plus.svg" alt="Cadastrar novo" width="32" height="32"  title="Novo funcionário">
+</a>
+<br>
+<br>
+
+<form action="findSearchFull" method="post" class="col s12">
+	<input type="text" name="nomepesquisar" id="nomepesquisar">	
+	<input class="btn btn-primary sm" type="submit" value="Buscar com Java">
+</form>
+
+<table class="display table table-striped table-bordered" id="tbFuncionarios">
+ <thead>
+	<tr> 
+		<th>
+			ID
+		</th>
+		<th>
+			Nome
+		</th>
+		<th>
+			Departamento
+		</th>
+		<th >
+			Ação
+		</th>
+			<th >
+			Ação
+		</th>
+	</tr>
+</thead>
+<tbody>
+	<tr th:each ="func: ${listafuncionarios}">
+		<td th:text= "${func.id}">Id</td>	
+		<td th:text= "${func.nome}">Name</td>	
+		<td th:text= "${func.reldepartamento.nome}">Departamento</td>	
+		
+		<td align="center" style="width:40px;"> 
+			<a th:href="@{/buscarporid/(idfuncionario=${func.id})}" class="btn btn-primary btn-sm btnEdicaoFunc"  >
+				Editar
+			</a>
+		</td>
+		<td align="center" style="width:40px;"> 
+			<a th:href="@{/deletarporid/(idfuncionario=${func.id})}" class="btn btn-danger btn-sm deletebtn">Deletar</a>
+		</td>
+	</tr>
+</tbody>
+</table>
+</div>
+
+
+
+<div class="modal" tabindex="-1" role="dialog " id="deleteModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirma deleção</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Deseja deletar o funcionário?</p>
+      </div>
+      <div class="modal-footer">
+        <a href=""  class="btn btn-danger" id="deleteId">Sim</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editFuncionario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<form th:action="@{/editarfuncionario}" method="POST" id="formEditar">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Editar Departamento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+       <div class="modal-body">
+          <div class="form-group">
+            <label for="feditId" class="col-form-label">Id:</label>
+            <input type="text" class="form-control" id="feditId" name="id" readonly="readonly">
+          </div>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="feditNome" class="col-form-label">Nome:</label>
+            <input type="text" class="form-control obrigatorioe" id="feditNome" name="nome">
+          </div>
+      </div>
+       <div class="modal-body">
+          <div class="form-group">
+            <label for="feditDocumento" class="col-form-label">Documento:</label>
+            <input type="text" class="form-control obrigatorioe" id="feditDocumento" name="documento">
+          </div>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="feditNascimento" class="col-form-label">Nascimento:</label>
+            <input type="text" data-mask="00/00/0000" placeholder="dd/mm/yyyy" class="form-control obrigatorioe" id="feditNascimento" name="nascimento">
+          </div>
+      </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="feditSalario" class="col-form-label">Salário:</label>
+            <input type="text"   data-mask="###0.00" data-mask-reverse="true" placeholder="99999.99" class="form-control obrigatorioe" id="feditSalario" name="salario">
+          </div>
+      </div>
+       <div class="modal-body">
+        <div class="form-group">
+       		<label for="feditDepartamento" class="col-form-label ">Departamento:</label>
+            <select name="reldepartamento" id="feditDepartamento"  class="obrigatorioe">
+                <option value=""> -- </option>
+                <option th:each ="dpto: ${listadepartamentos}" 
+                   th:value="${dpto.id}"
+                   th:utext="${dpto.nome}"/>
+        	 </select>
+          </div>
+       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary " data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary btnEditarCadastro">Salvar</button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+
+<div class="modal fade" id="addFuncionario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+<form th:action="@{/salvarfuncionario}" method="post" id="formCadastrar">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Novo Funcionário</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="addNome" class="col-form-label">Nome:</label>
+            <input type="text" class="form-control obrigatorio"  id="addNome" name="nome">
+          </div>
+      </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="adddocumento" class="col-form-label">Documento:</label>
+            <input type="text" class="form-control obrigatorio" id="adddocumento" name="documento">
+          </div>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="addnascimento" class="col-form-label">Nascimento:</label>
+            <input type="text" data-mask="00/00/0000" placeholder="dd/mm/yyyy" class="form-control obrigatorio" id="addnascimento" name="nascimento" >
+          </div>
+      </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="addsalario" class="col-form-label">Salário:</label>
+            <input type="text" data-mask="###0.00" data-mask-reverse="true" class="form-control obrigatorio" id="addsalario" name="salario">
+          </div>
+      </div>
+      
+      
+       <div class="modal-body">
+        <div class="form-group">
+       		<label for="adddepartamento" class="col-form-label">Departamento:</label>
+            <select name="reldepartamento" id="adddepartamento"  class="obrigatorio">
+                <option value=""> -- </option>
+                <option th:each ="dpto: ${listadepartamentos}"
+                   th:value="${dpto.id}"
+                   th:utext="${dpto.nome}"/>
+        	 </select>
+          </div>
+       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary btnAdd">Salvar</button>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+
+
+<script type="text/javascript" src="../static/js/jQuery-Mask-Plugin-master/src/jquery.mask.js" th:src="@{js/jQuery-Mask-Plugin-master/src/jquery.mask.js}"></script>
+<script type="text/javascript" src="../static/js/jQuery-Mask-Plugin-master/test/jquery.mask.test.js" th:src="@{js/jQuery-Mask-Plugin-master/test/jquery.mask.test.js}"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+		$("#tbFuncionarios").DataTable({
+				'aoColumnDefs': [{
+      				'bSortable': true,
+      				'aTargets': [-1] /* 1st one, start by the right */
+  				}],
+  				
+  				//dom: 'pfBrltB',
+  				//dom: 'pfBrltBip',
+  				"oLanguage":{
+  		          "sEmptyTable": "Nenhum registro encontrado",
+  		           "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+  		           "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+  		           "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+  		           "sInfoPostFix": "",
+  		           "sInfoThousands": ".",
+  		           "sLengthMenu": "_MENU_ resultados por página",
+  		           "sLoadingRecords": "Carregando...",
+  		           "sProcessing": "Processando...aguarde",
+  		           "sZeroRecords": "Nenhum registro encontrado",
+  		           "sSearch": "Pesquisar com Datatable",
+  		           "oPaginate": {
+  		               "sNext": "Próximo",
+  		               "sPrevious": "Anterior",
+  		               "sFirst": "Primeiro",
+  		               "sLast": "Último"
+  		            },
+  		  	    },
+  		 	
+  		  
+		});
+	})
+</script>
+		
+</body>
+</html>

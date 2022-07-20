@@ -1,0 +1,186 @@
+
+<div class="container">
+<br>
+<br>
+	<a data-toggle="modal" data-target="#novoProjeto" data-whatever="@mdo" style="cursor:pointer;">
+		<img src="../../webjars/bootstrap-icons/1.8.3//icons/clipboard-plus.svg" onclick='javascript:carregarGestores(0,0);' alt="Cadastrar novo" width="32" height="32"  title="Novo projeto">
+	</a>
+<br>
+<br>
+<table class="display table table-striped table-bordered" id="tblprojetos">
+	<thead>
+		<tr>
+			<th>
+				Id
+			</th>
+			<th>
+				Gestor
+			</th>
+			<th>
+				Nome
+			</th>
+			<th>
+				Início
+			</th>
+			<th>
+				Fim
+			</th>
+			<th>
+				Status
+			</th>
+			<th>
+				Editar
+			</th>
+			<th>
+				Equipe
+			</th>
+		</tr>
+	</thead>
+</table>
+
+
+<div class="modal fade" id="novoProjeto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<form  method="POST" id="formAdicionar">
+  <div class="modal-dialog" role="document">
+  <span class="alert alert-primary" role="alert" id="alertas" style="display:none;"></span>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Projeto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="pnid" class="col-form-label">Id:</label>
+             <input type="text" class="form-control" id="pnid" name="id" readonly="readonly">
+          </div>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="pnome" class="col-form-label">Nome:</label>
+            <input type="text" class="form-control obrigatorioe" id="pnome" name="nome">
+            <input type="hidden" name="flag_gestor" id="flag_gestor" value=1>
+          </div>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+       		<label for="pngestor" class="col-form-label ">Gestor:</label>
+            <select name="gestor" id="pngestor"  class="obrigatorioe"> </select>
+          </div>
+       </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="pninicio" class="col-form-label">Início:</label>
+            <input type="text" data-mask="00/00/0000" value="22/04/2023" placeholder="dd/mm/yyyy" class="form-control obrigatorioe" id="pninicio" name="inicio">
+          </div>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="pnfim" class="col-form-label">Fim:</label>
+            <input type="text" data-mask="00/00/0000"  value="22/08/2024" placeholder="dd/mm/yyyy" class="form-control obrigatorioe" id="pnfim" name="fim">
+          </div>
+      </div>
+      
+       <div class="modal-body">
+        <div class="form-group">
+       		<label for="pnstatusprojeto" class="col-form-label ">Status:</label>
+            <select name="statusprojeto" id="pnstatusprojeto"  class="obrigatorioe"></select>
+          </div>
+       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary " data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary btnSalvarNovo"  >Salvar</button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+</div>
+
+<div id="dialog-equipe" title="Equipe"></div>
+<input type="hidden" name="idprojetoLocal" id="idprojetoLocal">
+<script>
+//jquery ui modal com cadastro e listagem da equipe
+$( function() {
+    $( "#dialog-equipe" ).dialog({
+      modal: true,
+      autoOpen:false,
+      width:600,
+      buttons: {
+        Ok: function() {
+        	$.ajax({
+        		url:"/cadastroprojetos"
+        	})	
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+  } );
+  
+//listagem com os projetos
+ function listarProjetos(){
+	  $("#tblprojetos").DataTable({
+		pageLength:2,
+		 "lengthMenu": [ [10, 25, 50,75,100, -1], [10, 25, 50,75,100, "All"] ],
+		ajax:{
+			url: '/projetos/',
+			dataSrc:'',
+			method:'get'
+		},
+		columns:[
+			
+			{Title: 'Id',data: 'id'},
+			{Title: 'gestor',data: 'gestor.nome'},
+			{Title: 'nome',data: 'nome'},
+			{Title: 'inicio',data: 'inicio'},
+			{Title:'fim',data: 'fim'},
+			{Title: 'statusprojeto',data: 'statusprojeto'},
+			//para colocar os links
+			{Title:'Id',
+				data: 'id',
+				render:function(id){
+					return  "<button type='button' class='btn btn-info sm' onclick='editarRegistro("+id+")'>Editar</button>"
+			  }
+			},
+		
+			
+			{Title:	'nome',
+				data:{
+				    id: 'id',
+				    nome: 'nome'
+				},
+				render:function(data){
+					var link = data.id;
+					return  "<button type='button' class='btn btn-warning' onclick='abrir_equipe("+link+")'>Equipe</button>";
+			  }
+			},
+		],
+		"oLanguage":{
+	          "sEmptyTable": "Nenhum registro encontrado",
+	           "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+	           "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+	           "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+	           "sInfoPostFix": "",
+	           "sInfoThousands": ".",
+	           "sLengthMenu": "_MENU_ resultados por página",
+	           "sLoadingRecords": "Carregando...",
+	           "sProcessing": "Processando...aguarde",
+	           "sZeroRecords": "Nenhum registro encontrado",
+	           "sSearch": "Pesquisar com Datatable",
+	           "oPaginate": {
+	               "sNext": "Próximo",
+	               "sPrevious": "Anterior",
+	               "sFirst": "Primeiro",
+	               "sLast": "Último"
+	            },
+	  	    },
+	})
+}
+
+//ao carregar o html, mostrar o menu e a lista de projetos
+$(document).ready(function(){
+	listarProjetos();	
+})
+
+</script>
